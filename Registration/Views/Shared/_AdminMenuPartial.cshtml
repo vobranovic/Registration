@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Registration
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Admin"))
+{
+    <li class="nav-item">
+        <div>
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+        </div>
+    </li>
+}

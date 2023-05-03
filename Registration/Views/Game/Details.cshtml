@@ -1,0 +1,91 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Registration
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model IEnumerable<GameApplicationUser>
+
+@{
+    ViewData["Title"] = "Game Details";
+    var registered = Model.Take(10);
+    var waiting = Model.Skip(10);
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Game on @ViewBag.GameTime</h4>
+    <h4>Game Id: @ViewBag.GameId</h4>
+    <hr />
+    
+</div>
+
+@if (ViewBag.Check == 0 && SignInManager.IsSignedIn(User))
+{
+    <a asp-action="Register" asp-controller="Game" class="btn btn-primary" asp-route-id="@ViewBag.GameId">Register</a>
+}
+else if (ViewBag.Check == 1 && SignInManager.IsSignedIn(User))
+{
+    <a asp-action="Unregister" asp-controller="Game" class="btn btn-danger" asp-route-id="@ViewBag.GameId">Unregister</a>
+}
+else
+{
+    <p style="color:red">You must be <a asp-area="Identity" asp-page="/Account/Login">logged in</a> to register for a game.</p>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        Registered Players
+
+        <table class="table table-striped">
+            <thead>
+        <tr>
+            <th>
+                Player
+            </th>            
+        </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in registered)
+                {
+                    <tr>
+                        <td>
+                            @player.UserName
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+
+    </div>
+    <div class="col-md-6">
+        Waiting List
+
+        <table class="table table-striped">
+            <thead>
+        <tr>
+            <th>
+                Player
+            </th>            
+        </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in waiting)
+                {
+                    <tr>
+                        <td>
+                            @player.UserName
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<div>
+     <a asp-action="Index" class="btn btn-secondary">Back to Game List</a>
+</div>

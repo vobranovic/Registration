@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Registration
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model List<Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List of Games</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Players
+            </th>
+            <th>
+                Registered
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.Id
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayersRegistered)
+            </td>
+            <td>
+                @if (item.LoggedUserRegistered == true)
+                    {
+                        <b style="color:green">Yes</b>
+                    }
+                    else
+                    {
+                        <b style="color:red">No</b>
+                    }
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Open</a>
+                    @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Admin"))
+                    {
+                        <a class="btn btn-danger ml-5" asp-action="Delete" asp-controller="Home" asp-area="Admin" asp-route-id="@item.Id">Delete</a>
+                    }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
